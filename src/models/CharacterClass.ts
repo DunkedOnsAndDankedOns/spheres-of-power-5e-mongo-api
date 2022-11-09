@@ -1,4 +1,8 @@
-import Feature from './Feature'
+interface Feature {
+  name: string
+  level: Level
+  description: string
+}
 
 export default interface CharacterClass {
   name: string
@@ -6,9 +10,8 @@ export default interface CharacterClass {
 
   savingThrows: Stat[][]
 
-  // Associations
   features: Feature[]
-  specializations: Feature[]
+  specializations: Record<string, Feature[]>
   
   magicTalents: Record<Level, number>
   spellPoints: Record<Level, number>

@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express'
 import NotFoundError from '../errors/InternalServerError'
 import InternalServerError from '../errors/InternalServerError'
-import TraditionService, { TraditionRepository } from '../services/Tradition.service'
+import ItemService, { ItemRepository } from '../services/Item.service'
 
-let repository: TraditionRepository
+let repository: ItemRepository
 const getRepo = async () => {
   if (repository) { return repository }
-  repository = await TraditionService.repository()
+  repository = await ItemService.repository()
   return repository
 }
 

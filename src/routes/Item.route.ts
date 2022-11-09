@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as controller from '../controllers/Tradition.controller'
+import * as controller from '../controllers/Item.controller'
 
 const router = Router()
 

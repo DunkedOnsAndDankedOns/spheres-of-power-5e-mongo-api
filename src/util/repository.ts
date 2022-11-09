@@ -1,4 +1,4 @@
-import { Collection, Document, Filter, ObjectId } from 'mongodb'
+import { Document, Filter, ObjectId } from 'mongodb'
 import { CrudRepository } from '../types/CrudRepository'
 
 import { getCollection } from '../util/mongo'
@@ -7,7 +7,7 @@ type association = {
   foreginCollection: string
   foreginField: string
   localField: string
-  association: 'OneToMany' | 'OneToOne'
+  association: 'OneToMany' | 'OneToOne' | 'ManyToOne' | 'ManyToMany'
 }
 
 export async function createCrudRepository<T>(name: string, options?: {
@@ -30,7 +30,7 @@ export async function createCrudRepository<T>(name: string, options?: {
 
     async remove(id: string) {
       const result = await collection.deleteOne({
-        $where: new ObjectId(id)
+        _id: new ObjectId(id),
       })
       return result.deletedCount
     },
@@ -50,7 +50,7 @@ export async function createCrudRepository<T>(name: string, options?: {
         return original
       }
 
-      return applyAssociations(original, collection, options.associations)
+      return applyAssociations(original, options.associations)
     },
     async findAll(query: Filter<Document>) { 
       const originals = await collection.find(query).toArray()
@@ -58,12 +58,12 @@ export async function createCrudRepository<T>(name: string, options?: {
         return originals
       }
 
-      return originals.map(original => applyAssociations(original, collection, options.associations))
+      return originals.map(original => applyAssociations(original, options.associations))
     },
   }
 }
 
-async function applyAssociations(original: Document, collection: Collection<Document>, associations: association[]) {
+async function applyAssociations(original: Document, associations: association[]) {
   for (const association of associations) {
     const foreginCollection = await getCollection(association.foreginCollection)
 
@@ -74,7 +74,19 @@ async function applyAssociations(original: Document, collection: Collection<Docu
         break
       }
       case 'OneToMany': {
-        original[association.localField] = await foreginCollection.find({ [association.foreginField]: original._id }).toArray()
+        const localFieldName = association.localField.replace(/Ids/i, '')
+        const ids = original[association.localField]
+        original[localFieldName] = await foreginCollection.find({ [association.foreginField]: { $in: ids } }).toArray()
+        break
+      }
+      case 'ManyToOne': {
+        const localFieldName = association.localField.replace(/Id/i, '')
+        original[localFieldName] = await foreginCollection.findOne({ [association.foreginField]: { $in: original[association.localField] } })
+        break
+      }
+      case 'ManyToMany': {
+        const localFieldName = association.localField.replace(/Ids/i, '')
+        original[localFieldName] = await foreginCollection.find({ [association.foreginField]: { $in: original[association.localField] } }).toArray()
         break
       }
     }

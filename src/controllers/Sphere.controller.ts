@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express'
 import NotFoundError from '../errors/InternalServerError'
 import InternalServerError from '../errors/InternalServerError'
-import TraditionService, { TraditionRepository } from '../services/Tradition.service'
+import SphereService, { SphereRepository } from '../services/Sphere.service'
 
-let repository: TraditionRepository
+let repository: SphereRepository
 const getRepo = async () => {
   if (repository) { return repository }
-  repository = await TraditionService.repository()
+  repository = await SphereService.repository()
   return repository
 }
 

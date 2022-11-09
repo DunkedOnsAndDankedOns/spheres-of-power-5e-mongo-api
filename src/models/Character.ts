@@ -1,5 +1,3 @@
-import CharacterSphere from './CharacterSphere'
-
 export default interface Character {
   name: string
   armorClass: number
@@ -40,7 +38,7 @@ export default interface Character {
    */
   levels: Record<string, Level>
 
-  spheres: CharacterSphere[]
+  sphereIds: string[]
 
   alignment?: string
   backstory?: string

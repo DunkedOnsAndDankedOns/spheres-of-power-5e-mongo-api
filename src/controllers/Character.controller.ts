@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express'
 import NotFoundError from '../errors/InternalServerError'
 import InternalServerError from '../errors/InternalServerError'
-import TraditionService, { TraditionRepository } from '../services/Tradition.service'
+import CharacterService, { CharacterRepository } from '../services/Character.service'
 
-let repository: TraditionRepository
+let repository: CharacterRepository
 const getRepo = async () => {
   if (repository) { return repository }
-  repository = await TraditionService.repository()
+  repository = await CharacterService.repository()
   return repository
 }
 
@@ -23,12 +23,12 @@ export const findAll: RequestHandler = async (req, res, next) => {
 }
 
 
-export const find: RequestHandler = async (req, res, next) => {
+export const find: RequestHandler<{ id: string }> = async (req, res, next) => {
   try {
     const repo = await getRepo()
-    const { name } = req.query
+    const { id } = req.params
 
-    const result = await repo.find({ name: name })
+    const result = await repo.find({ _id: id })
    
     res.json({ result })
   } catch (e) {
