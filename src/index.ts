@@ -3,8 +3,8 @@ config()
 
 import * as express from 'express'
 import * as cors from 'cors'
-import * as DieController from './controllers/Die.controller'
 
+import DieRouter from './routes/Die.route'
 import TraditionRouter from './routes/Tradition.route'
 
 async function init() {
@@ -14,10 +14,7 @@ async function init() {
   app.use(express.json())
   app.use(cors())
 
-  // app.get('/die/:sides', DieController.find)
-  // app.post('/die', DieController.create)
-  app.get('/die/roll/:sides', DieController.roll)
-
+  app.get('/die', DieRouter)
   app.use('/tradition', TraditionRouter)
 
   app.use((err, req, res, next) => {
