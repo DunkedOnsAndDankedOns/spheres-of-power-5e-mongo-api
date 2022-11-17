@@ -16,7 +16,7 @@ export async function createCrudRepository<T>(name: string, options?: {
 }): Promise<CrudRepository<T>> {
   const collection = await getCollection(name)
 
-  if (options) {
+  if (options && options.uniqueFields) {
     for (const field of options.uniqueFields) {
       collection.createIndex({ [field]: 1 } , { unique: true })
     }
