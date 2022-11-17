@@ -12,6 +12,8 @@ import SphereRouter from './routes/Sphere.route'
 import ItemRouter from './routes/Item.route'
 import { connect } from './util/mongo'
 
+const port = process.env.EXPRESS_PORT || 3000
+
 const testMongoConnection = async () => {
   await connect()
 }
@@ -19,7 +21,6 @@ const testMongoConnection = async () => {
 async function init() {
   await testMongoConnection()
 
-  const port = 3000
   const app = express()
 
   app.use(express.json())
