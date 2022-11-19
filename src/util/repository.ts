@@ -58,7 +58,7 @@ export async function createCrudRepository<T>(name: string, options?: {
         return originals
       }
 
-      return originals.map(original => applyAssociations(original, options.associations))
+      return await Promise.all(originals.map(original => applyAssociations(original, options.associations)))
     },
   }
 }
