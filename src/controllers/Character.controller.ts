@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { ObjectId } from 'mongodb'
 import NotFoundError from '../errors/InternalServerError'
 import InternalServerError from '../errors/InternalServerError'
 import CharacterService, { CharacterRepository } from '../services/Character.service'
@@ -28,7 +29,7 @@ export const find: RequestHandler<{ id: string }> = async (req, res, next) => {
     const repo = await getRepo()
     const { id } = req.params
 
-    const result = await repo.find({ _id: id })
+    const result = await repo.find({ _id: new ObjectId(id) })
    
     res.json({ result })
   } catch (e) {

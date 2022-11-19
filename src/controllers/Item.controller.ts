@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express'
+import { ObjectId } from 'mongodb'
 import NotFoundError from '../errors/InternalServerError'
 import InternalServerError from '../errors/InternalServerError'
 import ItemService, { ItemRepository } from '../services/Item.service'
@@ -26,9 +27,9 @@ export const findAll: RequestHandler = async (req, res, next) => {
 export const find: RequestHandler = async (req, res, next) => {
   try {
     const repo = await getRepo()
-    const { name } = req.query
+    const { id } = req.params
 
-    const result = await repo.find({ name: name })
+    const result = await repo.find({ _id: new ObjectId(id) })
    
     res.json({ result })
   } catch (e) {
