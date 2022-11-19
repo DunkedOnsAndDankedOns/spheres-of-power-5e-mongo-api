@@ -58,7 +58,7 @@ export async function createCrudRepository<T>(name: string, options?: {
         return originals
       }
 
-      return originals.map(original => applyAssociations(original, options.associations))
+      return await Promise.all(originals.map(original => applyAssociations(original, options.associations)))
     },
   }
 }
@@ -81,7 +81,9 @@ async function applyAssociations(original: Document, associations: association[]
       }
       case 'ManyToOne': {
         const localFieldName = association.localField.replace(/Id/i, '')
-        original[localFieldName] = await foreginCollection.findOne({ [association.foreginField]: { $in: original[association.localField] } })
+        const id = new ObjectId(original[association.localField])
+        const match = await foreginCollection.findOne({ [association.foreginField]: id })
+        original[localFieldName] = match
         break
       }
       case 'ManyToMany': {
