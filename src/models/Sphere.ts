@@ -23,6 +23,6 @@ export default interface Sphere {
     name: string, 
     intro?: string,
     talents: Talent[]
-  }
+  }[]
   abilities: Ability[]
 }

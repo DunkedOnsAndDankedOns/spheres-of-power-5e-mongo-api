@@ -1,4 +1,4 @@
-import { Filter, Document, ObjectId } from 'mongodb'
+import { Filter, Document, ObjectId, WithId } from 'mongodb'
 
 export type CrudRepository<T> = {
   create(obj: T): Promise<ObjectId>
@@ -7,6 +7,6 @@ export type CrudRepository<T> = {
 
   update(id: string, obj: T): Promise<number>
 
-  find(query: Filter<Document>): Promise<Document>
-  findAll(query?: Filter<Document>): Promise<Document[]>
+  find(query: Filter<Document>): Promise<WithId<T>>
+  findAll(query?: Filter<Document>): Promise<WithId<T>[]>
 }

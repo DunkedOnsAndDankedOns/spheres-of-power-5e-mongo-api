@@ -41,10 +41,33 @@ export const create: RequestHandler = async (req, res, next) => {
   try {
     const repo = await getRepo()
 
-    const result = await repo.create(req.body)
+    const validated = await CharacterService.validate(req.body)
+    const character = await CharacterService.modelInput(validated)
+
+    const result = await repo.create(character)
    
     if (!result) {
       throw new InternalServerError('failed to create')
+    }
+
+    res.json({ result })
+  } catch (e) {
+    next(e)
+  }
+}
+
+export const update: RequestHandler = async (req, res, next) => {
+  try {
+    const repo = await getRepo()
+
+    const { id } = req.params
+
+    const validated = await CharacterService.validate(req.body)
+
+    const result = await repo.update(id, validated)
+   
+    if (!result) {
+      throw new InternalServerError('failed to update')
     }
 
     res.json({ result })
