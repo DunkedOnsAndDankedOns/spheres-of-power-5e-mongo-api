@@ -1,4 +1,4 @@
-interface Feature {
+export interface Feature {
   name: string
   level: Level
   description: string

@@ -1,8 +1,10 @@
+import HitPoints from "../types/HitPoints"
+
 export default interface Character {
   name: string
   armorClass: number
 
-  stats: Record<Stat, { score: number, modifier: number }>
+  stats: Stats
   traditionId: string
 
   speed: { [key in Movement]?: number }
@@ -16,17 +18,12 @@ export default interface Character {
 
   inventoryItemIds: string[]
   
-  hitPoints: {
-    current: number
-    max: number
-    rolled: number
-    temporary: number
-  }
+  hitPoints: HitPoints
 
   /**
    * Map from die sides to hit dice currenlty left
    */
-  hitDiceCurrent: Record<Die, number> 
+  hitDiceCurrent: { [key in Die]?: number }
 
   spellPool: {
     current: number
@@ -37,6 +34,8 @@ export default interface Character {
    * Map from class id to number of levels
    */
   levels: Record<string, Level>
+
+  classIds: string[]
 
   sphereIds: string[]
 

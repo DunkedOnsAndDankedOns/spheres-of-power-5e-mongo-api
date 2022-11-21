@@ -1,4 +1,4 @@
-import { Document, Filter, ObjectId } from 'mongodb'
+import { Document, Filter, ObjectId, WithId } from 'mongodb'
 import { CrudRepository } from '../types/CrudRepository'
 
 import { getCollection } from '../util/mongo'
@@ -44,16 +44,16 @@ export async function createCrudRepository<T>(name: string, options?: {
       return result.modifiedCount
     },
 
-    async find(query: Filter<Document>) { 
-      const original = await collection.findOne(query)
+    async find(query: Filter<Document>): Promise<WithId<T>> { 
+      const original = await collection.findOne(query) as WithId<T>
       if (!options?.associations) {
         return original
       }
 
       return applyAssociations(original, options.associations)
     },
-    async findAll(query: Filter<Document>) { 
-      const originals = await collection.find(query).toArray()
+    async findAll(query: Filter<Document>): Promise<WithId<T>[]> { 
+      const originals = await collection.find(query).toArray() as WithId<T>[]
       if (!options?.associations) {
         return originals
       }
@@ -63,7 +63,7 @@ export async function createCrudRepository<T>(name: string, options?: {
   }
 }
 
-async function applyAssociations(original: Document, associations: association[]) {
+async function applyAssociations<T>(original: WithId<T>, associations: association[]): Promise<WithId<T>> {
   for (const association of associations) {
     const foreginCollection = await getCollection(association.foreginCollection)
 

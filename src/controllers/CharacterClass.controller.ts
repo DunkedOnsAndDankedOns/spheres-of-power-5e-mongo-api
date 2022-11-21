@@ -41,7 +41,9 @@ export const create: RequestHandler = async (req, res, next) => {
   try {
     const repo = await getRepo()
 
-    const result = await repo.create(req.body)
+    const validated = await CharacterClassService.validate(req.body)
+
+    const result = await repo.create(validated)
    
     if (!result) {
       throw new InternalServerError('failed to create')
@@ -53,6 +55,25 @@ export const create: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const update: RequestHandler = async (req, res, next) => {
+  try {
+    const repo = await getRepo()
+
+    const { id } = req.params
+
+    const validated = await CharacterClassService.validate(req.body)
+
+    const result = await repo.update(id, validated)
+   
+    if (!result) {
+      throw new InternalServerError('failed to create')
+    }
+
+    res.json({ result })
+  } catch (e) {
+    next(e)
+  }
+}
 
 export const remove: RequestHandler<{ id: string }> = async (req, res, next) => {
   try {
