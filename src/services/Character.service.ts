@@ -44,12 +44,12 @@ export default {
       name: Joi.string().required(),
       armorClass: Joi.number().min(0).required(),
       stats: Joi.object<Stats>({
-        Strength: Joi.object({ score: Joi.number().min(0).max(20), modifier: Joi.number() }).required(),
-        Dexterity: Joi.object({ score: Joi.number().min(0).max(20), modifier: Joi.number() }).required(),
-        Constitution: Joi.object({ score: Joi.number().min(0).max(20), modifier: Joi.number() }).required(),
-        Wisdom: Joi.object({ score: Joi.number().min(0).max(20), modifier: Joi.number() }).required(),
-        Intelligence: Joi.object({ score: Joi.number().min(0).max(20), modifier: Joi.number() }).required(),
-        Charisma: Joi.object({ score: Joi.number().min(0).max(20), modifier: Joi.number() }).required(),
+        Strength: Joi.object({ score: Joi.number().min(0).max(20).required(), modifier: Joi.number() }).required(),
+        Dexterity: Joi.object({ score: Joi.number().min(0).max(20).required(), modifier: Joi.number() }).required(),
+        Constitution: Joi.object({ score: Joi.number().min(0).max(20).required(), modifier: Joi.number() }).required(),
+        Wisdom: Joi.object({ score: Joi.number().min(0).max(20).required(), modifier: Joi.number() }).required(),
+        Intelligence: Joi.object({ score: Joi.number().min(0).max(20).required(), modifier: Joi.number() }).required(),
+        Charisma: Joi.object({ score: Joi.number().min(0).max(20).required(), modifier: Joi.number() }).required(),
       }).required(),
       traditionId: Joi.string().required(),
       speed: Joi.object({
@@ -60,7 +60,7 @@ export default {
       }).required(),
       race: Joi.string().required(),
       background: Joi.string().required(),
-      languages: Joi.array<Language>().required(),
+      languages: Joi.array<Language>(),
       currency: Joi.object({
         cp: Joi.number().min(0),
         sp: Joi.number().min(0),
